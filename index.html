@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Happy Birthday Surprise</title>
+  <link rel="stylesheet" href="style.css">
+  <script defer src="script.js"></script>
+</head>
+<body>
+  <div class="container">
+    <div id="countdown-container">
+      <h1 class="countdown-title">Surprise akan tersedia dalam:</h1>
+      <div id="countdown">
+        <div><span id="days">00</span><span>Days</span></div>
+        <div><span id="hours">00</span><span>Hours</span></div>
+        <div><span id="minutes">00</span><span>Minutes</span></div>
+        <div><span id="seconds">00</span><span>Seconds</span></div>
+      </div>
+    </div>
+
+    <div id="birthday-card" class="hidden">
+      <h1 class="birthday-title">Happy Birthday, Sayang❤️</h1>
+      <p class="birthday-message">"Selamat ulang tahun, cinta sejatiku. Hari ini adalah hari yang paling istimewa karena dunia merayakan kelahiranmu, seseorang yang telah mengisi hidupku dengan cinta, tawa, dan kebahagiaan tak terhingga. Terima kasih telah menjadi alasan setiap senyumku dan pelangi di setiap badai hidupku. Semoga segala impianmu terwujud, dan aku berjanji akan selalu berada di sisimu untuk menjadikan hidup kita penuh dengan kenangan yang indah. Aku mencintaimu lebih dari kata-kata yang mampu kuungkapkan."</p>
+      <div class="balloons">
+        <div class="balloon"></div>
+        <div class="balloon"></div>
+        <div class="balloon"></div>
+      </div>
+    </div>
+
+    <canvas id="fireworks"></canvas>
+    </div>
+  </div>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const canvas = document.getElementById('fireworks');
+      const ctx = canvas.getContext('2d');
+      const countdownContainer = document.getElementById('countdown-container');
+      const birthdayCard = document.getElementById('birthday-card');
+      const countdownElements = {
+        days: document.getElementById('days'),
+        hours: document.getElementById('hours'),
+        minutes: document.getElementById('minutes'),
+        seconds: document.getElementById('seconds'),
+      };
+  
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+  
+      const fireworks = [];
+      const colors = ['#ff5733', '#33ff57', '#5733ff', '#ff33a8', '#33f0ff'];
+      let fireworksInterval;
+  
+      function random(min, max) {
+        return Math.random() * (max - min) + min;
+      }
+  
+      class Firework {
+        constructor(x, y) {
+          this.x = x;
+          this.y = y;
+          this.particles = [];
+          for (let i = 0; i < 50; i++) {
+            this.particles.push(new Particle(this.x, this.y));
+          }
+        }
+  
+        update() {
+          this.particles.forEach((particle, index) => {
+            if (particle.alpha <= 0) {
+              this.particles.splice(index, 1);
+            } else {
+              particle.update();
+            }
+          });
+        }
+  
+        draw() {
+          this.particles.forEach(particle => particle.draw());
+        }
+      }
+  
+      class Particle {
+        constructor(x, y) {
+          this.x = x;
+          this.y = y;
+          this.radius = random(2, 4);
+          this.color = colors[Math.floor(Math.random() * colors.length)];
+          this.velocityX = random(-3, 3);
+          this.velocityY = random(-3, 3);
+          this.alpha = 1;
+        }
+  
+        update() {
+          this.x += this.velocityX;
+          this.y += this.velocityY;
+          this.alpha -= 0.02;
+        }
+  
+        draw() {
+          ctx.save();
+          ctx.globalAlpha = this.alpha;
+          ctx.beginPath();
+          ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+          ctx.fillStyle = this.color;
+          ctx.fill();
+          ctx.closePath();
+          ctx.restore();
+        }
+      }
+  
+      function createFirework() {
+        fireworks.push(new Firework(random(0, canvas.width), random(0, canvas.height)));
+      }
+  
+      function animate() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        fireworks.forEach((firework, index) => {
+          if (firework.particles.length === 0) {
+            fireworks.splice(index, 1);
+          } else {
+            firework.update();
+            firework.draw();
+          }
+        });
+        requestAnimationFrame(animate);
+      }
+  
+      // Countdown Logic
+      const countdownDate = new Date("2024-12-17T00:00:00").getTime();
+  
+      function updateCountdown() {
+        const now = new Date().getTime();
+        const distance = countdownDate - now;
+  
+        if (distance <= 0) {
+          clearInterval(countdownInterval);
+          countdownContainer.style.display = 'none';
+          birthdayCard.classList.remove('hidden');
+          startFireworks(); // Mulai kembang api
+          return;
+        }
+  
+        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+  
+        countdownElements.days.textContent = days.toString().padStart(2, '0');
+        countdownElements.hours.textContent = hours.toString().padStart(2, '0');
+        countdownElements.minutes.textContent = minutes.toString().padStart(2, '0');
+        countdownElements.seconds.textContent = seconds.toString().padStart(2, '0');
+      }
+  
+      function startFireworks() {
+        fireworksInterval = setInterval(createFirework, 500);
+        animate();
+      }
+  
+      const countdownInterval = setInterval(updateCountdown, 1000);
+      updateCountdown();
+  
+      window.addEventListener('resize', () => {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+      });
+    });
+  </script>
+  
+  </div>
+</body>
+</html>
