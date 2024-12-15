@@ -4,6 +4,7 @@ const countdown = document.getElementById('countdown');
 const countdownContainer = document.getElementById('countdown-container');
 const birthdayCard = document.getElementById('birthday-card');
 
+
 function updateCountdown() {
   const now = new Date().getTime();
   const distance = countdownDate - now;

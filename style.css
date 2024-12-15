@@ -109,3 +109,15 @@ body {
     z-index: 10; /* Menempatkan canvas di atas elemen lainnya */
     pointer-events: none; /* Tidak mengganggu interaksi elemen lain */
   }
+  #birthday-music {
+    display: none; /* Menyembunyikan elemen audio dari tampilan */
+}
+
+  audio {
+    width: 100%; /* Agar kontrol audio menyesuaikan lebar kontainer */
+    max-width: 400px; /* Maksimal lebar untuk kontrol audio */
+    margin: 20px auto; /* Menempatkan kontrol audio di tengah */
+    background-color: #f0f0f0; /* Warna latar belakang kontrol audio */
+    border-radius: 8px; /* Sudut melengkung pada kontrol audio */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); /* Efek bayangan */
+}
