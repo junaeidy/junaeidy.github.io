@@ -1,180 +1,138 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Happy Birthday Surprise</title>
-  <link rel="stylesheet" href="style.css">
-  <script defer src="script.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Selamat Tahun Baru Sayang</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            font-family: 'Arial', sans-serif;
+            background: #000;
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            height: 100vh;
+        }
+
+        h1 {
+            font-size: 4rem;
+            text-align: center;
+            color: #ff6f61;
+            text-shadow: 0 0 20px #ff6f61, 0 0 30px #ff4b4b;
+            margin-bottom: 1rem;
+        }
+
+        p {
+            font-size: 1.5rem;
+            text-align: center;
+            color: #fff;
+            max-width: 800px;
+            margin: 0 1rem;
+        }
+
+        canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+    </style>
 </head>
 <body>
-    <audio id="birthday-music" autoplay loop>
-        <source src="Selamat.mp3" type="audio/mp3">
-    </audio>
-  <div class="container">
-    <div id="countdown-container">
-      <h1 class="countdown-title">Sesuatu yang spesial akan hadir dalam:</h1>
-      <div id="countdown">
-        <div><span id="days">00</span><span>Days</span></div>
-        <div><span id="hours">00</span><span>Hours</span></div>
-        <div><span id="minutes">00</span><span>Minutes</span></div>
-        <div><span id="seconds">00</span><span>Seconds</span></div>
-      </div>
-    </div>
-    
-
-    <div id="birthday-card" class="hidden">
-      <h1 class="birthday-title">Happy Birthday, Sayang❤️</h1>
-      <p class="birthday-message">"Selamat ulang tahun, cinta sejatiku. Hari ini adalah hari yang paling istimewa karena dunia merayakan kelahiranmu, seseorang yang telah mengisi hidupku dengan cinta, tawa, dan kebahagiaan tak terhingga. Terima kasih telah menjadi alasan setiap senyumku dan pelangi di setiap badai hidupku. Semoga segala impianmu terwujud, dan aku berjanji akan selalu berada di sisimu untuk menjadikan hidup kita penuh dengan kenangan yang indah. Aku mencintaimu lebih dari kata-kata yang mampu kuungkapkan."</p>
-      <div class="balloons">
-        <div class="balloon"></div>
-        <div class="balloon"></div>
-        <div class="balloon"></div>
-      </div>
-    </div>
-
     <canvas id="fireworks"></canvas>
-    </div>
-  </div>
-  <script>
-    document.addEventListener('contextmenu', function(event) {
-            event.preventDefault(); // Mencegah munculnya menu konteks (klik kanan)
-        });
-    document.addEventListener('DOMContentLoaded', () => {
-      const canvas = document.getElementById('fireworks');
-      const ctx = canvas.getContext('2d');
-      const countdownContainer = document.getElementById('countdown-container');
-      const birthdayCard = document.getElementById('birthday-card');
-      const countdownElements = {
-        days: document.getElementById('days'),
-        hours: document.getElementById('hours'),
-        minutes: document.getElementById('minutes'),
-        seconds: document.getElementById('seconds'),
-      };
-  
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-  
-      const fireworks = [];
-      const colors = ['#ff5733', '#33ff57', '#5733ff', '#ff33a8', '#33f0ff'];
-      let fireworksInterval;
-  
-      function random(min, max) {
-        return Math.random() * (max - min) + min;
-      }
-  
-      class Firework {
-        constructor(x, y) {
-          this.x = x;
-          this.y = y;
-          this.particles = [];
-          for (let i = 0; i < 50; i++) {
-            this.particles.push(new Particle(this.x, this.y));
-          }
-        }
-  
-        update() {
-          this.particles.forEach((particle, index) => {
-            if (particle.alpha <= 0) {
-              this.particles.splice(index, 1);
+    <h1>Selamat Tahun Baru, Sayang ❤️</h1>
+        <p>Semoga tahun ini membawa lebih banyak kebahagiaan dan cinta untuk kita berdua.</p>
+        <p>Terima kasih telah membuat hidupku lebih indah setiap harinya.</p>
+        <p>Aku akan selalu mencintaimu, dalam setiap detik yang kita lewati bersama. 💕</p>
+        <!-- <button onclick="showMoreLove()">Klik untuk Kejutan!</button>
+        <p id="extra-love" style="display:none; font-size: 1.2rem; margin-top: 20px;">Kamu adalah alasan aku tersenyum, setiap hari. 😘</p> -->
+
+    <script>
+      function showMoreLove() {
+            const extraLove = document.getElementById('extra-love');
+            if (extraLove.style.display === 'none') {
+                extraLove.style.display = 'block';
             } else {
-              particle.update();
+                extraLove.style.display = 'none';
             }
-          });
         }
-  
-        draw() {
-          this.particles.forEach(particle => particle.draw());
-        }
-      }
-  
-      class Particle {
-        constructor(x, y) {
-          this.x = x;
-          this.y = y;
-          this.radius = random(2, 4);
-          this.color = colors[Math.floor(Math.random() * colors.length)];
-          this.velocityX = random(-3, 3);
-          this.velocityY = random(-3, 3);
-          this.alpha = 1;
-        }
-  
-        update() {
-          this.x += this.velocityX;
-          this.y += this.velocityY;
-          this.alpha -= 0.02;
-        }
-  
-        draw() {
-          ctx.save();
-          ctx.globalAlpha = this.alpha;
-          ctx.beginPath();
-          ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-          ctx.fillStyle = this.color;
-          ctx.fill();
-          ctx.closePath();
-          ctx.restore();
-        }
-      }
-  
-      function createFirework() {
-        fireworks.push(new Firework(random(0, canvas.width), random(0, canvas.height)));
-      }
-  
-      function animate() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        fireworks.forEach((firework, index) => {
-          if (firework.particles.length === 0) {
-            fireworks.splice(index, 1);
-          } else {
-            firework.update();
-            firework.draw();
-          }
-        });
-        requestAnimationFrame(animate);
-      }
-  
-      // Countdown Logic
-      const countdownDate = new Date("2024-12-17T00:00:00").getTime();
-  
-      function updateCountdown() {
-        const now = new Date().getTime();
-        const distance = countdownDate - now;
-  
-        if (distance <= 0) {
-          clearInterval(countdownInterval);
-          countdownContainer.style.display = 'none';
-          birthdayCard.classList.remove('hidden');
-          startFireworks(); // Mulai kembang api
-          return;
-        }
-  
-        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-  
-        countdownElements.days.textContent = days.toString().padStart(2, '0');
-        countdownElements.hours.textContent = hours.toString().padStart(2, '0');
-        countdownElements.minutes.textContent = minutes.toString().padStart(2, '0');
-        countdownElements.seconds.textContent = seconds.toString().padStart(2, '0');
-      }
-  
-      function startFireworks() {
-        fireworksInterval = setInterval(createFirework, 500);
-        animate();
-      }
-  
-      const countdownInterval = setInterval(updateCountdown, 1000);
-      updateCountdown();
-  
-      window.addEventListener('resize', () => {
+        const canvas = document.getElementById('fireworks');
+        const ctx = canvas.getContext('2d');
+
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
-      });
-    });
-  </script>
-  
-  </div>
+
+        let particles = [];
+
+        class Particle {
+            constructor(x, y, color, speed, angle, lifetime) {
+                this.x = x;
+                this.y = y;
+                this.color = color;
+                this.speed = speed;
+                this.angle = angle;
+                this.lifetime = lifetime;
+                this.age = 0;
+            }
+
+            update() {
+                this.x += Math.cos(this.angle) * this.speed;
+                this.y += Math.sin(this.angle) * this.speed;
+                this.age++;
+            }
+
+            draw() {
+                ctx.fillStyle = this.color;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, 3, 0, Math.PI * 2);
+                ctx.fill();
+            }
+
+            isDead() {
+                return this.age >= this.lifetime;
+            }
+        }
+
+        function createFirework(x, y) {
+            const colors = ['#ff6f61', '#ffcc00', '#00ccff', '#ff33cc'];
+            for (let i = 0; i < 100; i++) {
+                const angle = Math.random() * Math.PI * 2;
+                const speed = Math.random() * 4 + 1;
+                const color = colors[Math.floor(Math.random() * colors.length)];
+                const lifetime = Math.random() * 50 + 50;
+
+                particles.push(new Particle(x, y, color, speed, angle, lifetime));
+            }
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            particles.forEach((particle, index) => {
+                particle.update();
+                particle.draw();
+                if (particle.isDead()) {
+                    particles.splice(index, 1);
+                }
+            });
+
+            if (Math.random() < 0.05) {
+                createFirework(Math.random() * canvas.width, Math.random() * canvas.height);
+            }
+
+            requestAnimationFrame(animate);
+        }
+
+        animate();
+
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+    </script>
 </body>
 </html>
